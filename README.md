@@ -1,5 +1,5 @@
 # RandomWallpapers
-Random geometric wallpaper generator 
+Random geometric wallpaper generator. The generator has different modes (currently 'circles', 'squares', 'stripes'), which produce different image styles. Visually appealing color palettes are retrieved from http://ColourLovers.com.
 
 ## Requirements
 - python-cairo (install with `sudo apt-get inbstall python-cairo` on Debian/Ubuntu systems)
