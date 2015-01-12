@@ -18,6 +18,9 @@ Random geometric wallpaper generator
 
 ## Examples
 
+Circles mode:
 ![Circles mode](https://raw.githubusercontent.com/flopp/RandomWallpapers/master/examples/circles.png)
+Squares mode:
 ![Squares mode](https://raw.githubusercontent.com/flopp/RandomWallpapers/master/examples/squares.png)
+Stripes mode:
 ![Stripes mode](https://raw.githubusercontent.com/flopp/RandomWallpapers/master/examples/stripes.png)
