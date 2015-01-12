@@ -44,13 +44,15 @@ def draw(surface, colors):
         break
       radius = random.randint(8, radius - 4)
 
-def nonintersecting_circle(minx, maxx, miny, maxy, minr, maxr, circles):
+def create_nonintersecting_circle(minx, maxx, miny, maxy, minr, maxr, circles):
+  import random
+  
   for try_index in xrange(0, 20):
     x = random.randint(minx, maxx)
     y = random.randint(miny, maxy)
     r = random.randint(minr, maxr)
     if not check_if_circle_intersects(x, y, r, circles):
-      return (x, y, radius)
+      return (x, y, r)
   return (0, 0, 0)
 
 def check_if_circle_intersects(x, y, r, circles):
