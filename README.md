@@ -15,3 +15,9 @@ Random geometric wallpaper generator
       --width VALUE   Width of generated image
       --height VALUE  Height of generated image
       --mode MODE     Type of wallpaper to generate; values: random, circles, squares, stripes
+
+## Examples
+
+![Circles mode](https://raw.githubusercontent.com/flopp/RandomWallpapers/master/examples/circles.png)
+![Squares mode](https://raw.githubusercontent.com/flopp/RandomWallpapers/master/examples/squares.png)
+![Stripes mode](https://raw.githubusercontent.com/flopp/RandomWallpapers/master/examples/stripes.png)
