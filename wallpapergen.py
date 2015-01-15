@@ -26,13 +26,20 @@ def hex_to_rgb(value):
   value = value.lstrip('#')
   if not len(value) == 6:
     return (0, 0, 0)
-  return tuple(int(value[i:i + 2], 16) / 256.0 for i in xrange(0, 3))
+  r = int(value[0:2], 16) / 256.0
+  g = int(value[2:4], 16) / 256.0
+  b = int(value[4:6], 16) / 256.0
+  return (r, g, b)
 
-def get_colors():
+def get_colors(palette_id):
   palette = []
   
   try:
-    palette = ColourLovers().palettes('random')[0].colours
+    if palette_id.isdigit():
+      res = ColourLovers().palette(int(palette_id))
+      palette = res[0].colours
+    else:
+      palette = ColourLovers().palettes('random')[0].colours
   except:
     print 'error accessing colourlovers.com'
     fallback_colors = [
@@ -67,6 +74,7 @@ def main():
   command_line_parser.add_argument('--width', metavar='VALUE', type=int, action=CheckDimensionAction, default=1024, help='Width of generated image.')
   command_line_parser.add_argument('--height', metavar='VALUE', type=int, action=CheckDimensionAction, default=768, help='Height of generated image.')
   command_line_parser.add_argument('--mode', metavar='MODE', choices=['random'] + modes.keys(), default='random', help='Type of wallpaper to generate.')
+  command_line_parser.add_argument('--palette', metavar='PALETTE', type=str, default='random', help='Color palette to use. Numerical palette id from Colourlovers.com, or \'random\'')
   command_line_parser.add_argument('output', metavar='FILE', help='Name of generated PNG image file.')
   command_line_args = command_line_parser.parse_args()
     
@@ -75,7 +83,7 @@ def main():
   surface = cairo.ImageSurface(cairo.FORMAT_RGB24, width, height)
   
   mode = random.choice(modes.keys()) if command_line_args.mode is 'random' else command_line_args.mode
-  modes[mode].draw(surface, get_colors())
+  modes[mode].draw(surface, get_colors(command_line_args.palette))
   
   surface.write_to_png(command_line_args.output)
 

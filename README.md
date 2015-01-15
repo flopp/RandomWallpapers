@@ -6,7 +6,8 @@ Random geometric wallpaper generator. The generator has different modes (current
 - python-colourlovers (install with `sudo pip install python-colourlovers`)
 
 ## Usage
-    ./wallpapergen.py [--width VALUE] [--height VALUE] [--mode MODE] FILE
+    ./wallpapergen.py [--width VALUE] [--height VALUE] [--mode MODE] 
+                      [--palette PALETTE] FILE
     
     positional arguments:
       FILE            Name of generated PNG image file
@@ -14,7 +15,11 @@ Random geometric wallpaper generator. The generator has different modes (current
     optional arguments:
       --width VALUE   Width of generated image
       --height VALUE  Height of generated image
-      --mode MODE     Type of wallpaper to generate; values: random, circles, squares, stripes
+      --mode MODE     Type of wallpaper to generate; 
+                      values: 'random', 'circles', 'squares', 'stripes'; 
+                      default: 'ramdom'
+      --palette PALETTE  Color palette to use. Numerical palette id from
+                      Colourlovers.com, or 'random'; default: 'random'
 
 ## Examples
 
