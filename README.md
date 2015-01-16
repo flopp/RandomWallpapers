@@ -17,7 +17,7 @@ Random geometric wallpaper generator. The generator has different modes (current
       --height VALUE  Height of generated image
       --mode MODE     Type of wallpaper to generate; 
                       values: 'random', 'circles', 'squares', 'stripes'; 
-                      default: 'ramdom'
+                      default: 'random'
       --palette PALETTE  Color palette to use. Numerical palette id from
                       Colourlovers.com, or 'random'; default: 'random'
 
