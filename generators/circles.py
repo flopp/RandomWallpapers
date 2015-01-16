@@ -13,50 +13,54 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-### circles
+# 'circles' generator
+
+
 def draw(surface, colors):
-  import math
-  import random
-  import cairo
-  dc = cairo.Context(surface)
-  
-  width = surface.get_width()
-  height = surface.get_height()  
-  max_radius = min(width, height) // 2
-  
-  (r,g,b) = colors[0]
-  dc.set_source_rgb(r, g, b)
-  dc.rectangle(0, 0, width, height)
-  dc.fill()
-  
-  circles = []
-  while True:
-    (x, y, radius) = create_nonintersecting_circle(0, width, 0, height, 8, max_radius, circles)
-    if radius <= 0:
-      break
-    circles.append((x, y, radius))
-    
-    for color in colors[1:]:
-      dc.set_source_rgb(color[0], color[1], color[2])
-      dc.arc(x, y, radius, 0, 2 * math.pi)
-      dc.fill()
-      if radius <= 16:
-        break
-      radius = random.randint(8, radius - 4)
+    import math
+    import random
+    import cairo
+
+    dc = cairo.Context(surface)
+
+    width = surface.get_width()
+    height = surface.get_height()
+    max_radius = min(width, height) // 2
+
+    dc.set_source_rgb(*colors[0])
+    dc.rectangle(0, 0, width, height)
+    dc.fill()
+
+    circles = []
+    while True:
+        (x, y, radius) = create_nonintersecting_circle(0, width, 0, height, 8, max_radius, circles)
+        if radius <= 0:
+            break
+        circles.append((x, y, radius))
+
+        for color in colors[1:]:
+            dc.set_source_rgb(*color)
+            dc.arc(x, y, radius, 0, 2 * math.pi)
+            dc.fill()
+            if radius <= 16:
+                break
+            radius = random.randint(8, radius - 4)
+
 
 def create_nonintersecting_circle(minx, maxx, miny, maxy, minr, maxr, circles):
-  import random
-  
-  for try_index in xrange(0, 20):
-    x = random.randint(minx, maxx)
-    y = random.randint(miny, maxy)
-    r = random.randint(minr, maxr)
-    if not check_if_circle_intersects(x, y, r, circles):
-      return (x, y, r)
-  return (0, 0, 0)
+    import random
+
+    for try_index in range(0, 20):
+        x = random.randint(minx, maxx)
+        y = random.randint(miny, maxy)
+        r = random.randint(minr, maxr)
+        if not check_if_circle_intersects(x, y, r, circles):
+            return x, y, r
+    return 0, 0, 0
+
 
 def check_if_circle_intersects(x, y, r, circles):
-  for (x2, y2, r2) in circles:
-    if (x-x2)*(x-x2) + (y-y2)*(y-y2) < (r+r2)*(r+r2):
-      return True
-  return False
+    for (x2, y2, r2) in circles:
+        if (x - x2) * (x - x2) + (y - y2) * (y - y2) < (r + r2) * (r + r2):
+            return True
+    return False

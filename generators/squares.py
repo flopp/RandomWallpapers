@@ -13,35 +13,37 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-### squares
-def draw(surface, colors):
-  import math
-  import random
-  import cairo
-  
-  dc = cairo.Context(surface)
-  
-  width = surface.get_width()
-  height = surface.get_height()  
-  max_dim = max(width, height)
-  
-  angle = 5 * random.randint(0, 17) # 0 deg - 85 deg in steps of 5 deg
-  
-  dc.translate(width/2, height/2)
-  dc.rotate(angle * math.pi / 180.0)
-  
-  min_side = 16
-  max_side = min(width, height) // 2
-  side = random.randint(min_side, max_side)
-  
-  dc.set_source_rgb(colors[0][0], colors[0][1], colors[0][2])
-  dc.rectangle(0, 0, width, height)
-  dc.fill()
+# 'squares' generator
 
-  for x in xrange(-2*max_dim, 2*max_dim, side):
-    for y in xrange(-2*max_dim, 2*max_dim, side):
-      color = random.choice(colors)
-      dc.set_source_rgb(color[0], color[1], color[2])
-      # let the rectangles overlap to the top left in order to avoid antialiasing artifacts at the edges
-      dc.rectangle(x-1, y-1, side+1, side+1)
-      dc.fill()
+
+def draw(surface, colors):
+    import math
+    import random
+    import cairo
+
+    dc = cairo.Context(surface)
+
+    width = surface.get_width()
+    height = surface.get_height()
+    max_dim = max(width, height)
+
+    angle = 5 * random.randint(0, 17)  # 0 deg - 85 deg in steps of 5 deg
+
+    dc.translate(width / 2, height / 2)
+    dc.rotate(angle * math.pi / 180.0)
+
+    min_side = 16
+    max_side = min(width, height) // 2
+    side = random.randint(min_side, max_side)
+
+    dc.set_source_rgb(colors[0][0], colors[0][1], colors[0][2])
+    dc.rectangle(0, 0, width, height)
+    dc.fill()
+
+    for x in range(-2 * max_dim, 2 * max_dim, side):
+        for y in range(-2 * max_dim, 2 * max_dim, side):
+            color = random.choice(colors)
+            dc.set_source_rgb(color[0], color[1], color[2])
+            # let the rectangles overlap to the top left in order to avoid antialiasing artifacts at the edges
+            dc.rectangle(x - 1, y - 1, side + 1, side + 1)
+            dc.fill()

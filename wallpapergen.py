@@ -18,75 +18,50 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import random
+import logging
 import cairo
 from generators import circles, squares, stripes
-from colourlovers import ColourLovers
+from lib import palettes
 
-def hex_to_rgb(value):
-  value = value.lstrip('#')
-  if not len(value) == 6:
-    return (0, 0, 0)
-  r = int(value[0:2], 16) / 256.0
-  g = int(value[2:4], 16) / 256.0
-  b = int(value[4:6], 16) / 256.0
-  return (r, g, b)
-
-def get_colors(palette_id):
-  palette = []
-  
-  try:
-    if palette_id.isdigit():
-      res = ColourLovers().palette(int(palette_id))
-      palette = res[0].colours
-    else:
-      palette = ColourLovers().palettes('random')[0].colours
-  except:
-    print 'error accessing colourlovers.com'
-    fallback_colors = [
-      ['#0e376f', '#3a6ba5', '#fdfdfd', '#f9d401', '#f99f00'], 
-      ['#3e0f45', '#624466', '#6f848f', '#999388', '#807373'], 
-      ['#a07b69', '#7b5759', '#6f4559', '#4e3258', '#3a254c'],
-      ['#443c2b', '#757a65', '#7edcce', '#b6eaaa', '#f8f79e'],
-      ['#c9f77a', '#a7fc38', '#7ad12e', '#39423d', '#282b34'],
-      ['#05285e', '#316cc4', '#4796e9', '#d6eaee', '#ffffff'],
-      ['#1c273d', '#2a2f42', '#49455e', '#616a8b', '#7fabff'],
-      ['#5a8365', '#646754', '#b4bb63', '#504e48', '#b8bb9e'],
-      ['#525454', '#566466', '#698b91', '#bcced1', '#e8e5d3'],
-      ]
-    palette = random.choice(fallback_colors)
-  
-  return [hex_to_rgb(color_string) for color_string in palette]
-  
 
 def main():
-  import argparse
-  
-  modes = { 'circles' : circles, 'squares' : squares, 'stripes' : stripes }
-  
-  command_line_parser = argparse.ArgumentParser(version='0.0.1')
-  
-  class CheckDimensionAction(argparse.Action):
-    def __call__(self, parser, namespace, values, option_string=None):
-        if values < 16:
-            parser.error("Value of {0} must be larger than 16.".format(option_string))
-        setattr(namespace, self.dest, values)
-  
-  command_line_parser.add_argument('--width', metavar='VALUE', type=int, action=CheckDimensionAction, default=1024, help='Width of generated image.')
-  command_line_parser.add_argument('--height', metavar='VALUE', type=int, action=CheckDimensionAction, default=768, help='Height of generated image.')
-  command_line_parser.add_argument('--mode', metavar='MODE', choices=['random'] + modes.keys(), default='random', help='Type of wallpaper to generate.')
-  command_line_parser.add_argument('--palette', metavar='PALETTE', type=str, default='random', help='Color palette to use. Numerical palette id from Colourlovers.com, or \'random\'')
-  command_line_parser.add_argument('output', metavar='FILE', help='Name of generated PNG image file.')
-  command_line_args = command_line_parser.parse_args()
+    import argparse
+    modes = {'circles': circles, 'squares': squares, 'stripes': stripes}
+
+    command_line_parser = argparse.ArgumentParser()
+
+    class CheckDimensionAction(argparse.Action):
+        def __call__(self, parser, namespace, values, option_string=None):
+            if values < 16:
+                parser.error("Value of {0} must be larger than 16.".format(option_string))
+            setattr(namespace, self.dest, values)
+
+    command_line_parser.add_argument('--width', metavar='VALUE', type=int, action=CheckDimensionAction, default=1024, help='Width of generated image.')
+    command_line_parser.add_argument('--height', metavar='VALUE', type=int, action=CheckDimensionAction, default=768, help='Height of generated image.')
+    modes_choices = ['random'] + list(modes.keys())
+    command_line_parser.add_argument('--mode', metavar='MODE', choices=modes_choices, default='random', help='Type of wallpaper to generate.')
+    command_line_parser.add_argument('--palette', metavar='PALETTE', type=str, default='random', help='Color palette to use. Numerical palette id from Colourlovers.com, or \'random\'')
+    command_line_parser.add_argument('-v', '--verbose', action="store_true", help='Print verbose messages.')
+    command_line_parser.add_argument('output', metavar='FILE', help='Name of generated PNG image file.')
+    command_line_args = command_line_parser.parse_args()
     
-  width = command_line_args.width
-  height = command_line_args.height
-  surface = cairo.ImageSurface(cairo.FORMAT_RGB24, width, height)
-  
-  mode = random.choice(modes.keys()) if command_line_args.mode is 'random' else command_line_args.mode
-  modes[mode].draw(surface, get_colors(command_line_args.palette))
-  
-  surface.write_to_png(command_line_args.output)
+    if command_line_args.verbose:
+        logging.basicConfig(level=logging.DEBUG)
+
+    width = command_line_args.width
+    height = command_line_args.height
+    surface = cairo.ImageSurface(cairo.FORMAT_RGB24, width, height)
+
+    mode = random.choice(modes.keys()) if command_line_args.mode is 'random' else command_line_args.mode
+    logging.info('using generator: "{0}"'.format(mode))
+
+    pal = palettes.Palettes()
+    colors = pal.get_palette(command_line_args.palette) if command_line_args.palette.isdigit() else pal.get_random_palette()
+    modes[mode].draw(surface, colors)
+
+    logging.info('writing image file: "{0}"'.format(command_line_args.output))
+    surface.write_to_png(command_line_args.output)
 
 
 if __name__ == '__main__':
-  main()
+    main()
