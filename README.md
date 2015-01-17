@@ -23,6 +23,12 @@ Random geometric wallpaper generator. The generator has different modes (current
       --palette PALETTE  Color palette to use. Numerical palette id from
                       Colourlovers.com, or 'random'; default: 'random'
 
+You may want to run the generator at regular intervals to constantly get new wallpapers. On a unix/linux system, this can achieved via a cronjob or the `watch` command line tool, e.g.
+
+    watch -n 600 ~/RandomWallpapers/wallpapergen.py --width 1920 --height 1080 --out ~/RandomWallpapers/wallpaper.png
+
+This command assumes that you have cloned the repository to ~/RandomWallpapers
+
 ## Examples
 
 ### Circles mode:
