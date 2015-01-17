@@ -25,9 +25,9 @@ Random geometric wallpaper generator. The generator has different modes (current
 
 You may want to run the generator at regular intervals to constantly get new wallpapers. On a unix/linux system, this can achieved via a cronjob or the `watch` command line tool, e.g.
 
-    watch -n 600 ~/RandomWallpapers/wallpapergen.py --width 1920 --height 1080 --out ~/RandomWallpapers/wallpaper.png
+    watch -n 600 ~/RW/wallpapergen.py --width 1920 --height 1080 --out ~/RW/wallpaper.png
 
-This command assumes that you have cloned the repository to ~/RandomWallpapers
+This command assumes that you have cloned the repository to `~/RW`, that your screen resolution in 1920x1080, and that you want to generate a wallpaper every 600 seconds. The reulting image ist stored in `~/RW/wallpaper.png` which you can set as your desktop wallpaper. Any respectable desktop environment should reload the wallpaper as soon as the file changes.
 
 ## Examples
 
