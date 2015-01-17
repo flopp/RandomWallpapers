@@ -20,13 +20,13 @@
 import random
 import logging
 import cairo
-from generators import circles, squares, stripes
+from generators import circles, squares, stripes, triangles
 from lib import palettes
 
 
 def main():
     import argparse
-    modes = {'circles': circles, 'squares': squares, 'stripes': stripes}
+    modes = {'circles': circles, 'squares': squares, 'stripes': stripes, 'triangles': triangles}
 
     command_line_parser = argparse.ArgumentParser()
 
