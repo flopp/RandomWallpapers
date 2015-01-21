@@ -15,6 +15,8 @@
 
 # 'circles' generator
 
+from common import get_distance
+
 
 def draw(surface, colors):
     import math
@@ -61,6 +63,6 @@ def create_nonintersecting_circle(minx, maxx, miny, maxy, minr, maxr, circles):
 
 def check_if_circle_intersects(x, y, r, circles):
     for (x2, y2, r2) in circles:
-        if (x - x2) * (x - x2) + (y - y2) * (y - y2) < (r + r2) * (r + r2):
+        if get_distance((x, y), (x2, y2)) < (r + r2):
             return True
     return False

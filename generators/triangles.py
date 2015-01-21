@@ -15,20 +15,7 @@
 
 # 'triangulation' generator
 
-
-def get_unused_color(colors, used):
-    import random
-    remaining_colors = [color for color in colors if color not in used]
-    if len(remaining_colors) == 0:
-        remaining_colors = colors
-    return random.choice(remaining_colors)
-
-
-def get_distance(p1, p2):
-    from math import sqrt
-    dx = p1[0] - p2[0]
-    dy = p1[1] - p2[1]
-    return sqrt(dx * dx + dy * dy)
+from common import get_distance, get_unused_color
 
 
 def draw(surface, colors):
@@ -41,7 +28,7 @@ def draw(surface, colors):
 
     width = surface.get_width()
     height = surface.get_height()
-    min_allowed_dist = max(width, height) // 10
+    min_allowed_dist = max(width, height) // random.randint(10, 20)
 
     w2 = width // 2
     h2 = height // 2

@@ -38,12 +38,10 @@ def draw(surface, colors):
     dc.rotate(angle * math.pi / 180.0)
     x = -2 * max_dim
     while x < 2 * max_dim:
-        color = colors[stripe_index]
+        dc.set_source_rgb(*colors[stripe_index])
         stripe_width = stripe_widths[stripe_index]
-        stripe_index = (stripe_index + 1) % len(colors)
-
-        dc.set_source_rgb(color[0], color[1], color[2])
         dc.rectangle(x, -2 * max_dim, stripe_width + 2, 4 * max_dim)
         dc.fill()
 
         x += stripe_width
+        stripe_index = (stripe_index + 1) % len(colors)
