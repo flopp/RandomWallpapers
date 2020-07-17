@@ -12,42 +12,28 @@ class Palettes:
     def __init__(self) -> None:
         self.__colourlovers = clapi.ColourLovers()
         self.__log = logging.getLogger("Palettes")
-        self.__color_re = re.compile(
-            "^#?([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$", re.IGNORECASE
-        )
+        self.__color_re = re.compile("^#?([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$", re.IGNORECASE)
 
     def get_palette(self, palette_id: int) -> typing.List[RGB]:
-        self.__log.info(
-            "trying to get palette (id=%d) from colourlovers.com", int(palette_id)
-        )
+        self.__log.info("trying to get palette (id=%d) from colourlovers.com", int(palette_id))
         try:
             palette = self.__colourlovers.search_palette(id=palette_id)[0]
-            self.__log.info(
-                'received palette: id=%d, title="%s"', palette.id, palette.title
-            )
+            self.__log.info('received palette: id=%d, title="%s"', palette.id, palette.title)
             return self.__strings_to_rgbs(palette.colors)
         except Exception as e:
             logging.exception(e)
-            self.__log.warning(
-                "cannot access colourlovers.com; using random static palette"
-            )
+            self.__log.warning("cannot access colourlovers.com; using random static palette")
             return self.__get_random_static_palette()
 
     def get_random_palette(self) -> typing.List[RGB]:
         self.__log.info("trying to get random palette from colourlovers.com")
         try:
-            palette = random.choice(
-                self.__colourlovers.search_palettes(request="top", numResults=20)
-            )
-            self.__log.info(
-                'received palette: id=%d, title="%s"', palette.id, palette.title
-            )
+            palette = random.choice(self.__colourlovers.search_palettes(request="top", numResults=20))
+            self.__log.info('received palette: id=%d, title="%s"', palette.id, palette.title)
             return self.__strings_to_rgbs(palette.colors)
         except Exception as e:
             logging.exception(e)
-            self.__log.warning(
-                "cannot access colourlovers.com; using random static palette"
-            )
+            self.__log.warning("cannot access colourlovers.com; using random static palette")
             return self.__get_random_static_palette()
 
     def __get_random_static_palette(self) -> typing.List[RGB]:

@@ -41,9 +41,7 @@ def draw(surface: cairo.ImageSurface, colors: typing.List[RGB]) -> None:
 
     circles: typing.List[Circle] = []
     while True:
-        (x, y, radius) = create_nonintersecting_circle(
-            (0, width), (0, height), (8, max_radius), circles
-        )
+        (x, y, radius) = create_nonintersecting_circle((0, width), (0, height), (8, max_radius), circles)
         if radius <= 0:
             break
         circles.append((x, y, radius))
@@ -72,9 +70,7 @@ def create_nonintersecting_circle(
     return 0, 0, 0
 
 
-def check_if_circle_intersects(
-    x: int, y: int, r: int, circles: typing.List[Circle]
-) -> bool:
+def check_if_circle_intersects(x: int, y: int, r: int, circles: typing.List[Circle]) -> bool:
     for (x2, y2, r2) in circles:
         if get_distance((x, y), (x2, y2)) < (r + r2):
             return True

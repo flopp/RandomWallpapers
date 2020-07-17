@@ -27,17 +27,13 @@ from wallpapergen.lib.rgb import RGB
 
 
 def draw(surface: cairo.ImageSurface, colors: typing.List[RGB]) -> None:
-    tri = scipy.spatial.Delaunay(
-        numpy.array(generate_points(surface.get_width(), surface.get_height()))
-    )
+    tri = scipy.spatial.Delaunay(numpy.array(generate_points(surface.get_width(), surface.get_height())))
 
     # compute triangle colors, trying to find distinct colors for neighboring
     # triangles
     triangle_colors: typing.List[typing.Optional[RGB]] = [None] * len(tri.simplices)
     for index, _ in enumerate(tri.simplices):
-        used_colors = {
-            triangle_colors[neighbor_index] for neighbor_index in tri.neighbors[index]
-        }
+        used_colors = {triangle_colors[neighbor_index] for neighbor_index in tri.neighbors[index]}
         triangle_colors[index] = get_unused_color(colors, used_colors)
 
     # draw triangles
@@ -88,11 +84,7 @@ def generate_points(width: int, height: int) -> typing.List[typing.Tuple[int, in
             x = random.randint(-w2, width + w2)
             y = random.randint(-h2, height + h2)
 
-            min_dist = (
-                min_allowed_dist
-                if len(points) == 0
-                else min([get_distance((x, y), p2) for p2 in points])
-            )
+            min_dist = min_allowed_dist if len(points) == 0 else min([get_distance((x, y), p2) for p2 in points])
             if min_dist >= min_allowed_dist:
                 points.append((x, y))
                 point_placed = True

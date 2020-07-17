@@ -64,13 +64,9 @@ def main() -> None:
                 setattr(namespace, self.dest, values)
             try:
                 if int(values) <= 0:
-                    parser.error(
-                        f"Value oof {option_string} must be 'random' or an int > 0."
-                    )
+                    parser.error(f"Value oof {option_string} must be 'random' or an int > 0.")
             except ValueError:
-                parser.error(
-                    f"Value oof {option_string} must be 'random' or an int > 0."
-                )
+                parser.error(f"Value oof {option_string} must be 'random' or an int > 0.")
             setattr(namespace, self.dest, values)
 
     command_line_parser.add_argument(
@@ -91,11 +87,7 @@ def main() -> None:
     )
     modes_choices = ["random"] + list(modes.keys())
     command_line_parser.add_argument(
-        "--mode",
-        metavar="MODE",
-        choices=modes_choices,
-        default="random",
-        help="Type of wallpaper to generate.",
+        "--mode", metavar="MODE", choices=modes_choices, default="random", help="Type of wallpaper to generate.",
     )
     command_line_parser.add_argument(
         "--palette",
@@ -105,12 +97,8 @@ def main() -> None:
         default="random",
         help="Color palette to use. Numerical palette id from Colourlovers.com, or 'random'",
     )
-    command_line_parser.add_argument(
-        "-v", "--verbose", action="store_true", help="Print verbose messages."
-    )
-    command_line_parser.add_argument(
-        "output", metavar="FILE", help="Name of generated PNG image file."
-    )
+    command_line_parser.add_argument("-v", "--verbose", action="store_true", help="Print verbose messages.")
+    command_line_parser.add_argument("output", metavar="FILE", help="Name of generated PNG image file.")
     command_line_args = command_line_parser.parse_args()
 
     if command_line_args.verbose:
@@ -128,9 +116,7 @@ def main() -> None:
         palette_id = int(command_line_args.palette)
         colors = palettes.Palettes().get_palette(palette_id)
 
-    surface = cairo.ImageSurface(
-        cairo.FORMAT_RGB24, command_line_args.width, command_line_args.height
-    )
+    surface = cairo.ImageSurface(cairo.FORMAT_RGB24, command_line_args.width, command_line_args.height)
     modes[mode].draw(surface, colors)
 
     logging.info("writing image file: %s", command_line_args.output)

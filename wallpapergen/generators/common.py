@@ -5,9 +5,7 @@ import typing
 from wallpapergen.lib.rgb import RGB
 
 
-def get_unused_color(
-    colors: typing.List[RGB], used: typing.Set[typing.Optional[RGB]],
-) -> RGB:
+def get_unused_color(colors: typing.List[RGB], used: typing.Set[typing.Optional[RGB]],) -> RGB:
     remaining_colors = [color for color in colors if color not in used]
     if len(remaining_colors) == 0:
         remaining_colors = colors
