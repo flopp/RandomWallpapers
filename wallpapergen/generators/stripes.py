@@ -15,19 +15,20 @@
 
 # 'stripes' generator
 
+import math
+import random
+import cairo
+
 
 def draw(surface, colors):
-    import math
-    import random
-    import cairo
-
     dc = cairo.Context(surface)
 
     width = surface.get_width()
     height = surface.get_height()
     max_dim = max(width, height)
 
-    angle = 5 * random.randint(1, 17)  # 5 deg - 85 deg in steps of 5 deg
+    # 5 deg - 85 deg in steps of 5 deg
+    angle = 5 * random.randint(1, 17)
     if random.randint(0, 1):
         angle *= -1
 

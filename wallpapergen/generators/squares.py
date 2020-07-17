@@ -15,18 +15,20 @@
 
 # 'squares' generator
 
-def draw(surface, colors):
-    import math
-    import random
-    import cairo
+import math
+import random
+import cairo
 
+
+def draw(surface, colors):
     dc = cairo.Context(surface)
 
     width = surface.get_width()
     height = surface.get_height()
     max_dim = max(width, height)
 
-    angle = 5 * random.randint(0, 17)  # 0 deg - 85 deg in steps of 5 deg
+    # 0 deg - 85 deg in steps of 5 deg
+    angle = 5 * random.randint(0, 17)
 
     dc.translate(width / 2, height / 2)
     dc.rotate(angle * math.pi / 180.0)
@@ -42,6 +44,7 @@ def draw(surface, colors):
     for x in range(-2 * max_dim, 2 * max_dim, side):
         for y in range(-2 * max_dim, 2 * max_dim, side):
             dc.set_source_rgb(*random.choice(colors))
-            # let the rectangles overlap to the top left in order to avoid antialiasing artifacts at the edges
+            # let the rectangles overlap to the top left in order to avoid
+            # antialiasing artifacts at the edges
             dc.rectangle(x - 1, y - 1, side + 1, side + 1)
             dc.fill()

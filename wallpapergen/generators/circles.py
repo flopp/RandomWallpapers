@@ -15,14 +15,13 @@
 
 # 'circles' generator
 
-from common import get_distance
+import math
+import random
+import cairo
+from wallpapergen.generators.common import get_distance
 
 
 def draw(surface, colors):
-    import math
-    import random
-    import cairo
-
     dc = cairo.Context(surface)
 
     width = surface.get_width()
@@ -35,7 +34,9 @@ def draw(surface, colors):
 
     circles = []
     while True:
-        (x, y, radius) = create_nonintersecting_circle(0, width, 0, height, 8, max_radius, circles)
+        (x, y, radius) = create_nonintersecting_circle(
+            (0, width), (0, height), (8, max_radius), circles
+        )
         if radius <= 0:
             break
         circles.append((x, y, radius))
@@ -49,13 +50,11 @@ def draw(surface, colors):
             radius = random.randint(8, radius - 4)
 
 
-def create_nonintersecting_circle(minx, maxx, miny, maxy, minr, maxr, circles):
-    import random
-
-    for try_index in range(0, 20):
-        x = random.randint(minx, maxx)
-        y = random.randint(miny, maxy)
-        r = random.randint(minr, maxr)
+def create_nonintersecting_circle(x_range, y_range, r_range, circles):
+    for _ in range(0, 20):
+        x = random.randint(*x_range)
+        y = random.randint(*y_range)
+        r = random.randint(*r_range)
         if not check_if_circle_intersects(x, y, r, circles):
             return x, y, r
     return 0, 0, 0

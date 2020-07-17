@@ -1,1 +1,4 @@
-python-colourlovers>=0.1.1
+colourlovers
+numpy
+pycairo
+scipy
