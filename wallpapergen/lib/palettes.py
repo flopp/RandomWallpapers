@@ -1,23 +1,27 @@
 import logging
 import random
 import re
+import typing
+
 from colourlovers import clapi
+
+from wallpapergen.lib.rgb import RGB
 
 
 class Palettes:
-    def __init__(self):
+    def __init__(self) -> None:
         self.__colourlovers = clapi.ColourLovers()
         self.__log = logging.getLogger("Palettes")
         self.__color_re = re.compile(
             "^#?([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$", re.IGNORECASE
         )
 
-    def get_palette(self, palette_id):
+    def get_palette(self, palette_id: int) -> typing.List[RGB]:
         self.__log.info(
             "trying to get palette (id=%d) from colourlovers.com", int(palette_id)
         )
         try:
-            palette = self.__colourlovers.search_palette(id=int(palette_id))[0]
+            palette = self.__colourlovers.search_palette(id=palette_id)[0]
             self.__log.info(
                 'received palette: id=%d, title="%s"', palette.id, palette.title
             )
@@ -29,7 +33,7 @@ class Palettes:
             )
             return self.__get_random_static_palette()
 
-    def get_random_palette(self):
+    def get_random_palette(self) -> typing.List[RGB]:
         self.__log.info("trying to get random palette from colourlovers.com")
         try:
             palette = random.choice(
@@ -46,7 +50,7 @@ class Palettes:
             )
             return self.__get_random_static_palette()
 
-    def __get_random_static_palette(self):
+    def __get_random_static_palette(self) -> typing.List[RGB]:
         static_palettes = [
             ["#0e376f", "#3a6ba5", "#fdfdfd", "#f9d401", "#f99f00"],
             ["#3e0f45", "#624466", "#6f848f", "#999388", "#807373"],
@@ -60,7 +64,7 @@ class Palettes:
         ]
         return self.__strings_to_rgbs(random.choice(static_palettes))
 
-    def __hex_to_rgb(self, color_string):
+    def __hex_to_rgb(self, color_string: str) -> RGB:
         match = self.__color_re.match(color_string)
         if not match:
             self.__log.warning("cannot parse color string: %s", color_string)
@@ -71,5 +75,5 @@ class Palettes:
         b = int(match.group(3), 16) / 256.0
         return r, g, b
 
-    def __strings_to_rgbs(self, color_strings):
+    def __strings_to_rgbs(self, color_strings: typing.List[str]) -> typing.List[RGB]:
         return [self.__hex_to_rgb(color_string) for color_string in color_strings]

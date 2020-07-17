@@ -18,15 +18,18 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import argparse
-import random
 import logging
+import random
+import typing
+
 import cairo
+
 from wallpapergen.generators import circles, squares, stripes, triangles
 from wallpapergen.lib import palettes
 
 
-def main():
-    modes = {
+def main() -> None:
+    modes: typing.Dict[str, typing.Any] = {
         "circles": circles,
         "squares": squares,
         "stripes": stripes,
@@ -36,9 +39,38 @@ def main():
     command_line_parser = argparse.ArgumentParser()
 
     class CheckDimensionAction(argparse.Action):
-        def __call__(self, parser, namespace, values, option_string=None):
+        def __call__(
+            self,
+            parser: argparse.ArgumentParser,
+            namespace: argparse.Namespace,
+            values: typing.Union[str, typing.Sequence[typing.Any], None],
+            option_string: typing.Optional[str] = None,
+        ) -> None:
+            assert isinstance(values, int)
             if values < 16:
                 parser.error(f"Value of {option_string} must be larger than 16.")
+            setattr(namespace, self.dest, values)
+
+    class CheckRandomOrIntAction(argparse.Action):
+        def __call__(
+            self,
+            parser: argparse.ArgumentParser,
+            namespace: argparse.Namespace,
+            values: typing.Union[str, typing.Sequence[typing.Any], None],
+            option_string: typing.Optional[str] = None,
+        ) -> None:
+            assert isinstance(values, str)
+            if values == "random":
+                setattr(namespace, self.dest, values)
+            try:
+                if int(values) <= 0:
+                    parser.error(
+                        f"Value oof {option_string} must be 'random' or an int > 0."
+                    )
+            except ValueError:
+                parser.error(
+                    f"Value oof {option_string} must be 'random' or an int > 0."
+                )
             setattr(namespace, self.dest, values)
 
     command_line_parser.add_argument(
@@ -69,6 +101,7 @@ def main():
         "--palette",
         metavar="PALETTE",
         type=str,
+        action=CheckRandomOrIntAction,
         default="random",
         help="Color palette to use. Numerical palette id from Colourlovers.com, or 'random'",
     )
@@ -83,22 +116,20 @@ def main():
     if command_line_args.verbose:
         logging.basicConfig(level=logging.DEBUG)
 
-    width = command_line_args.width
-    height = command_line_args.height
-    surface = cairo.ImageSurface(cairo.FORMAT_RGB24, width, height)
-
-    mode = (
-        random.choice(list(modes.keys()))
-        if command_line_args.mode == "random"
-        else command_line_args.mode
-    )
+    if command_line_args.mode == "random":
+        mode = random.choice(list(modes.keys()))
+    else:
+        mode = command_line_args.mode
     logging.info("using generator: %s", mode)
 
-    pal = palettes.Palettes()
-    colors = (
-        pal.get_palette(command_line_args.palette)
-        if command_line_args.palette.isdigit()
-        else pal.get_random_palette()
+    if command_line_args.palette == "random":
+        colors = palettes.Palettes().get_random_palette()
+    else:
+        palette_id = int(command_line_args.palette)
+        colors = palettes.Palettes().get_palette(palette_id)
+
+    surface = cairo.ImageSurface(
+        cairo.FORMAT_RGB24, command_line_args.width, command_line_args.height
     )
     modes[mode].draw(surface, colors)
 

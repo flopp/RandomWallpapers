@@ -17,10 +17,14 @@
 
 import math
 import random
+import typing
+
 import cairo
 
+from wallpapergen.lib.rgb import RGB
 
-def draw(surface, colors):
+
+def draw(surface: cairo.ImageSurface, colors: typing.List[RGB]) -> None:
     dc = cairo.Context(surface)
 
     width = surface.get_width()

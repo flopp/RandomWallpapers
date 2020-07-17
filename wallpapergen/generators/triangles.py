@@ -16,19 +16,24 @@
 # 'triangulation' generator
 
 import random
+import typing
+
 import cairo
 import numpy
 import scipy.spatial
+
 from wallpapergen.generators.common import get_distance, get_unused_color
+from wallpapergen.lib.rgb import RGB
 
 
-def draw(surface, colors):
-    points = generate_points(surface.get_width(), surface.get_height())
-    tri = scipy.spatial.Delaunay(numpy.array(points))
+def draw(surface: cairo.ImageSurface, colors: typing.List[RGB]) -> None:
+    tri = scipy.spatial.Delaunay(
+        numpy.array(generate_points(surface.get_width(), surface.get_height()))
+    )
 
     # compute triangle colors, trying to find distinct colors for neighboring
     # triangles
-    triangle_colors = [None] * len(tri.simplices)
+    triangle_colors: typing.List[typing.Optional[RGB]] = [None] * len(tri.simplices)
     for index, _ in enumerate(tri.simplices):
         used_colors = {
             triangle_colors[neighbor_index] for neighbor_index in tri.neighbors[index]
@@ -39,7 +44,9 @@ def draw(surface, colors):
     dc = cairo.Context(surface)
     lines = set()
     for index, triangle in enumerate(tri.points[tri.simplices]):
-        dc.set_source_rgb(*triangle_colors[index])
+        color = triangle_colors[index]
+        assert color is not None
+        dc.set_source_rgb(*color)
         dc.new_path()
         for p in triangle:
             dc.line_to(*p)
@@ -59,7 +66,7 @@ def draw(surface, colors):
                 dc.stroke()
 
 
-def generate_points(width, height):
+def generate_points(width: int, height: int) -> typing.List[typing.Tuple[int, int]]:
     min_allowed_dist = max(width, height) // random.randint(10, 20)
     w2 = width // 2
     h2 = height // 2

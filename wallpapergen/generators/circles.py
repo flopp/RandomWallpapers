@@ -17,11 +17,18 @@
 
 import math
 import random
+import typing
+
 import cairo
+
 from wallpapergen.generators.common import get_distance
+from wallpapergen.lib.rgb import RGB
 
 
-def draw(surface, colors):
+Circle = typing.Tuple[int, int, int]
+
+
+def draw(surface: cairo.ImageSurface, colors: typing.List[RGB]) -> None:
     dc = cairo.Context(surface)
 
     width = surface.get_width()
@@ -32,7 +39,7 @@ def draw(surface, colors):
     dc.rectangle(0, 0, width, height)
     dc.fill()
 
-    circles = []
+    circles: typing.List[Circle] = []
     while True:
         (x, y, radius) = create_nonintersecting_circle(
             (0, width), (0, height), (8, max_radius), circles
@@ -50,7 +57,12 @@ def draw(surface, colors):
             radius = random.randint(8, radius - 4)
 
 
-def create_nonintersecting_circle(x_range, y_range, r_range, circles):
+def create_nonintersecting_circle(
+    x_range: typing.Tuple[int, int],
+    y_range: typing.Tuple[int, int],
+    r_range: typing.Tuple[int, int],
+    circles: typing.List[Circle],
+) -> Circle:
     for _ in range(0, 20):
         x = random.randint(*x_range)
         y = random.randint(*y_range)
@@ -60,7 +72,9 @@ def create_nonintersecting_circle(x_range, y_range, r_range, circles):
     return 0, 0, 0
 
 
-def check_if_circle_intersects(x, y, r, circles):
+def check_if_circle_intersects(
+    x: int, y: int, r: int, circles: typing.List[Circle]
+) -> bool:
     for (x2, y2, r2) in circles:
         if get_distance((x, y), (x2, y2)) < (r + r2):
             return True
