@@ -62,7 +62,7 @@ class TrianglesGenerator(Generator):
                     dc.stroke()
 
     @staticmethod
-    def compute_colors(triangulation: scipy.spatial.Delauny, colors: typing.List[RGB]) -> typing.List[RGB]:
+    def compute_colors(triangulation: scipy.spatial.Delaunay, colors: typing.List[RGB]) -> typing.List[RGB]:
         triangle_colors: typing.List[RGB] = []
         for index, _ in enumerate(triangulation.simplices):
             used_colors = {
