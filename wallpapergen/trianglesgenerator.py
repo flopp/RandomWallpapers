@@ -1,4 +1,4 @@
-# Copyright (C) 2015 Florian Pigorsch <mail@florian-pigorsch.de>
+# Copyright (C) 2015-2020 Florian Pigorsch <mail@florian-pigorsch.de>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -63,15 +63,20 @@ class TrianglesGenerator(Generator):
 
     @staticmethod
     def compute_colors(triangulation: scipy.spatial.Delaunay, colors: typing.List[RGB]) -> typing.List[RGB]:
-        triangle_colors: typing.List[RGB] = []
-        for index, _ in enumerate(triangulation.simplices):
-            used_colors = {
-                triangle_colors[neighbor_index]
-                for neighbor_index in triangulation.neighbors[index]
-                if 0 <= neighbor_index < len(triangle_colors)
+        all_colors = [color for color, _ in enumerate(colors)]
+        assigned_colors: typing.List[int] = []
+        for triangle_index, _ in enumerate(triangulation.simplices):
+            neighbor_colors = {
+                assigned_colors[neighbor_index]
+                for neighbor_index in triangulation.neighbors[triangle_index]
+                if 0 <= neighbor_index < len(assigned_colors)
             }
-            triangle_colors.append(TrianglesGenerator.get_unused_color(colors, used_colors))
-        return triangle_colors
+            remaining_colors = [color for color in all_colors if color not in neighbor_colors]
+            if len(remaining_colors) == 0:
+                assigned_colors.append(random.choice(all_colors))
+            else:
+                assigned_colors.append(random.choice(remaining_colors))
+        return [colors[color] for color in assigned_colors]
 
     @staticmethod
     def generate_points(width: int, height: int) -> typing.List[typing.Tuple[int, int]]:
@@ -107,10 +112,3 @@ class TrianglesGenerator(Generator):
                 break
 
         return points
-
-    @staticmethod
-    def get_unused_color(colors: typing.List[RGB], used: typing.Set[typing.Optional[RGB]],) -> RGB:
-        remaining_colors = [color for color in colors if color not in used]
-        if len(remaining_colors) == 0:
-            remaining_colors = colors
-        return random.choice(remaining_colors)
