@@ -27,7 +27,6 @@ import cairo
 from wallpapergen.generators import circles, squares, stripes, triangles
 from wallpapergen.lib import palettes
 
-
 def main() -> None:
     modes: typing.Dict[str, typing.Any] = {
         "circles": circles,
