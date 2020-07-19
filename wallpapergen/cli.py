@@ -24,15 +24,19 @@ import typing
 
 import cairo
 
-from wallpapergen.generators import circles, squares, stripes, triangles
-from wallpapergen.lib import palettes
+from wallpapergen.circlesgenerator import CirclesGenerator
+from wallpapergen.squaresgenerator import SquaresGenerator
+from wallpapergen.stripesgenerator import StripesGenerator
+from wallpapergen.trianglesgenerator import TrianglesGenerator
+from wallpapergen.palettes import Palettes
+
 
 def main() -> None:
     modes: typing.Dict[str, typing.Any] = {
-        "circles": circles,
-        "squares": squares,
-        "stripes": stripes,
-        "triangles": triangles,
+        "circles": CirclesGenerator,
+        "squares": SquaresGenerator,
+        "stripes": StripesGenerator,
+        "triangles": TrianglesGenerator,
     }
 
     command_line_parser = argparse.ArgumentParser()
@@ -110,13 +114,13 @@ def main() -> None:
     logging.info("using generator: %s", mode)
 
     if command_line_args.palette == "random":
-        colors = palettes.Palettes().get_random_palette()
+        colors = Palettes().get_random_palette()
     else:
         palette_id = int(command_line_args.palette)
-        colors = palettes.Palettes().get_palette(palette_id)
+        colors = Palettes().get_palette(palette_id)
 
     surface = cairo.ImageSurface(cairo.FORMAT_RGB24, command_line_args.width, command_line_args.height)
-    modes[mode].draw(surface, colors)
+    modes[mode]().draw(surface, colors)
 
     logging.info("writing image file: %s", command_line_args.output)
     surface.write_to_png(command_line_args.output)
